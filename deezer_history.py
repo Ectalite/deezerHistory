@@ -33,14 +33,15 @@ def get_history() -> None:
 
     url_get_profiles = "https://www.deezer.com/ajax/gw-light.php?method=deezer.getChildAccounts&input=3&api_version=1.0&api_token="
     req = session.post(url_get_profiles)
-    profile_list = []
-    print("Found profiles:")
-    for i, profile in enumerate(req.json()['results']):
-        profile_list.append(profile['USER_ID'])
-        print("{} - {} {}".format(i, profile['USER_ID'], profile['BLOG_NAME']))
-    selected_profile_nb = int(input('Select a profile: '))
-    profile_id = profile_list[selected_profile_nb]
-    session.cookies.update({'account_id': profile_id})
+    if req.json()['results'].__len__() != 0:
+        profile_list = []
+        print("Found profiles:")
+        for i, profile in enumerate(req.json()['results']):
+            profile_list.append(profile['USER_ID'])
+            print("{} - {} {}".format(i, profile['USER_ID'], profile['BLOG_NAME']))
+        selected_profile_nb = int(input('Select a profile: '))
+        profile_id = profile_list[selected_profile_nb]
+        session.cookies.update({'account_id': profile_id})
 
     url_get_csrf_token = "https://www.deezer.com/ajax/gw-light.php?method=deezer.getUserData&input=3&api_version=1.0&api_token="
     req = session.post(url_get_csrf_token)
